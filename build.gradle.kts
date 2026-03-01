@@ -1,6 +1,8 @@
 plugins {
+    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinxSerialization)
+
 }
 
 kotlin {
@@ -23,4 +25,3 @@ kotlin {
         }
     }
 }
-

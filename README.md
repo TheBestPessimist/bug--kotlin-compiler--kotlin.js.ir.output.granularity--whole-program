@@ -2,14 +2,14 @@
 
 ## Summary
 
-When using `kotlin.js.ir.output.granularity=whole-program` in a Kotlin/JS project with kotlinx.serialization, tests fail on subsequent runs with `SerializationException`. The first test run usually passes, but all subsequent runs fail.
+When using `kotlin.js.ir.output.granularity=whole-program` in a Kotlin/JS project with kotlinx.serialization, tests fail on subsequent runs with `SerializationException`. The first test after JVM starts usually passes, but all subsequent runs fail.
 
 ## Environment
 
 - **Kotlin**: 2.3.10
 - **kotlinx.serialization**: 1.10.0
-- **Gradle**: 9.x
-- **OS**: Windows 11 (also likely reproducible on other platforms)
+- **Gradle**: 9.3
+- **OS**: Windows 11
 
 ## Steps to Reproduce
 
@@ -43,7 +43,15 @@ All 5 test runs should pass consistently.
 
 Error output:
 ```
-SerializationException at Platform.kt:50
+SerializationException: Serializer for class 'RequestNode' is not found.
+Please ensure that class is marked as '@Serializable' and that the serialization compiler plugin is applied.
+To get enum serializer on Kotlin/JS, it should be annotated with @Serializable annotation.
+	at <global>.platformSpecificSerializerNotRegistered(C:\opt\buildAgent\work\b2fef8360e1bcf3d\core\jsMain\src\kotlinx\serialization\internal\Platform.kt:50)
+	at <global>.serializer(C:\opt\buildAgent\work\b2fef8360e1bcf3d\core\commonMain\src\kotlinx\serialization\Serializers.kt:153)
+	at AugmentCliSessionDtoTest.protoOf.shouldDeserializeRequestNodeType0TextNode_fuye1c(C:\opt\buildAgent\work\b2fef8360e1bcf3d\core\commonMain\src\kotlinx\serialization\Serializers.kt:54)
+	at <global>.fn(kotlin\kotlin-js-whole-program-serialization-bug-test.js:40695)
+	at Context.<anonymous>(D:\all\work\bugs\bug--kotlin-compiler--kotlin.js.ir.output.granularity--whole-program\build\js\node_modules\kotlin-web-helpers\src\KotlinTestTeamCityConsoleAdapter.ts:72)
+	at <global>.processImmediate(node:internal/timers:505)
 ```
 
 ## Workaround
@@ -71,4 +79,3 @@ The `whole-program` granularity setting compiles the entire Kotlin/JS project in
 - `src/jsMain/kotlin/.../AugmentCliSessionDto.kt` - Data classes with `@Serializable` annotations
 - `src/jsTest/kotlin/.../AugmentCliSessionDtoTest.kt` - Tests that deserialize JSON to these classes
 - `gradle.properties` - Contains the problematic `kotlin.js.ir.output.granularity=whole-program` setting
-
