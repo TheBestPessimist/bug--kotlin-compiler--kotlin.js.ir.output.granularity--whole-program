@@ -1,5 +1,7 @@
 # Kotlin/JS Serialization Bug with `kotlin.js.ir.output.granularity=whole-program`
 
+Jetbrains issue: https://youtrack.jetbrains.com/issue/KT-84633/Kotlin-JS-Serialization-Bug-with-kotlin.js.ir.output.granularitywhole-program
+
 ## Summary
 
 When using `kotlin.js.ir.output.granularity=whole-program` in a Kotlin/JS project with kotlinx.serialization, tests fail on subsequent runs with `SerializationException`. The first test after JVM starts usually passes, but all subsequent runs fail.
